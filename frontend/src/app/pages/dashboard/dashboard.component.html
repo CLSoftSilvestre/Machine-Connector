@@ -1,0 +1,223 @@
+<div class="dashboard-container page-container">
+  <div class="page-header">
+    <h1 class="page-title">Dashboard</h1>
+    <span class="uptime" *ngIf="health()">
+      Uptime: {{ formatUptime(health()!.uptime) }}
+    </span>
+  </div>
+
+  <!-- Stat Cards Row -->
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon-wrap pending-bg">
+          <mat-icon>pending</mat-icon>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value">{{ stats()?.pending ?? 0 }}</div>
+          <div class="stat-label">Pending Events</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon-wrap failed-bg">
+          <mat-icon>error_outline</mat-icon>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value failed-value">{{ stats()?.failed ?? 0 }}</div>
+          <div class="stat-label">Failed Events</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon-wrap equipment-bg">
+          <mat-icon>settings_input_component</mat-icon>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value">{{ equipmentCount() }}</div>
+          <div class="stat-label">Equipment Count</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon-wrap sent-bg">
+          <mat-icon>check_circle_outline</mat-icon>
+        </div>
+        <div class="stat-info">
+          <div class="stat-value sent-value">{{ getSentTodayCount() }}</div>
+          <div class="stat-label">Events Sent</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Connection Status Cards -->
+  <div class="connections-grid">
+    <mat-card class="connection-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>router</mat-icon>
+        <mat-card-title>OPC-UA</mat-card-title>
+        <mat-card-subtitle>Machine Data Source</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="connection-status">
+          <span class="status-dot" [class]="getConnectionStatusClass(connections().opcua)"></span>
+          <span class="status-label" [class]="'label-' + getConnectionStatusClass(connections().opcua)">
+            {{ getConnectionLabel(connections().opcua) }}
+          </span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="connection-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>cloud</mat-icon>
+        <mat-card-title>IIH Essentials</mat-card-title>
+        <mat-card-subtitle>Counter Data Source</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="connection-status">
+          <span class="status-dot" [class]="getConnectionStatusClass(connections().iih)"></span>
+          <span class="status-label" [class]="'label-' + getConnectionStatusClass(connections().iih)">
+            {{ getConnectionLabel(connections().iih) }}
+          </span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="connection-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>factory</mat-icon>
+        <mat-card-title>Apriso MES</mat-card-title>
+        <mat-card-subtitle>Event Destination</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="connection-status">
+          <span class="status-dot" [class]="getConnectionStatusClass(connections().apriso)"></span>
+          <span class="status-label" [class]="'label-' + getConnectionStatusClass(connections().apriso)">
+            {{ getConnectionLabel(connections().apriso) }}
+          </span>
+        </div>
+        <div class="stub-badge">
+          <mat-icon class="stub-icon">info</mat-icon>
+          <span>Stub Mode</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Event Type Breakdown -->
+  <div class="breakdown-grid" *ngIf="stats()">
+    <mat-card class="breakdown-card">
+      <mat-card-header>
+        <mat-card-title>Event Breakdown by Type</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="breakdown-row">
+          <span class="breakdown-label">Machine Status</span>
+          <span class="breakdown-value">{{ stats()?.byType?.MACHINE_STATUS ?? 0 }}</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="breakdown-label">Counter</span>
+          <span class="breakdown-value">{{ stats()?.byType?.COUNTER ?? 0 }}</span>
+        </div>
+        <div class="breakdown-row total-row">
+          <span class="breakdown-label">Total</span>
+          <span class="breakdown-value">{{ stats()?.total ?? 0 }}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="breakdown-card">
+      <mat-card-header>
+        <mat-card-title>Event Breakdown by Status</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="breakdown-row">
+          <span class="status-chip status-pending">Pending</span>
+          <span class="breakdown-value">{{ stats()?.pending ?? 0 }}</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="status-chip status-sending">Sending</span>
+          <span class="breakdown-value">{{ stats()?.sending ?? 0 }}</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="status-chip status-sent">Sent</span>
+          <span class="breakdown-value">{{ stats()?.sent ?? 0 }}</span>
+        </div>
+        <div class="breakdown-row">
+          <span class="status-chip status-failed">Failed</span>
+          <span class="breakdown-value">{{ stats()?.failed ?? 0 }}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Recent Events Table -->
+  <mat-card class="recent-events-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>list_alt</mat-icon>
+        Recent Events
+      </mat-card-title>
+      <mat-card-subtitle>Last 20 events</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="table-container" *ngIf="recentEvents().length > 0; else noEvents">
+        <table mat-table [dataSource]="recentEvents()" class="full-width">
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let event">
+              <span class="type-chip" [class.machine-status]="event.type === 'MACHINE_STATUS'" [class.counter]="event.type === 'COUNTER'">
+                <mat-icon>{{ event.type === 'MACHINE_STATUS' ? 'memory' : 'speed' }}</mat-icon>
+                {{ event.type === 'MACHINE_STATUS' ? 'Machine Status' : 'Counter' }}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="equipmentName">
+            <th mat-header-cell *matHeaderCellDef>Equipment</th>
+            <td mat-cell *matCellDef="let event">{{ event.equipmentName }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let event">
+              <span class="status-chip" [class]="getStatusClass(event.status)">
+                {{ event.status }}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="createdAt">
+            <th mat-header-cell *matHeaderCellDef>Created</th>
+            <td mat-cell *matCellDef="let event">{{ formatTimestamp(event.createdAt) }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="retryCount">
+            <th mat-header-cell *matHeaderCellDef>Retries</th>
+            <td mat-cell *matCellDef="let event">
+              <span [class.has-retries]="event.retryCount > 0">{{ event.retryCount }}</span>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+
+      <ng-template #noEvents>
+        <div class="no-data">
+          <mat-icon>inbox</mat-icon>
+          <p>No events yet. Connect equipment to start receiving data.</p>
+        </div>
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+</div>

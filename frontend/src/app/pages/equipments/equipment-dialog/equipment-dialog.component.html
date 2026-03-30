@@ -1,0 +1,56 @@
+<h2 mat-dialog-title>
+  <mat-icon>{{ data.mode === 'create' ? 'add_circle' : 'edit' }}</mat-icon>
+  {{ title }}
+</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="equipment-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Name *</mat-label>
+      <input matInput formControlName="name" placeholder="e.g. Injection Molding Machine 1" />
+      <mat-error *ngIf="form.get('name')?.hasError('required')">Name is required</mat-error>
+      <mat-error *ngIf="form.get('name')?.hasError('maxlength')">Name must be under 100 characters</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" rows="2" placeholder="Optional description of this equipment"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>OPC-UA Node ID *</mat-label>
+      <input matInput formControlName="opcuaNodeId" placeholder="ns=2;s=Machine1.Status" />
+      <mat-hint>The OPC-UA node ID for machine status monitoring</mat-hint>
+      <mat-error *ngIf="form.get('opcuaNodeId')?.hasError('required')">OPC-UA Node ID is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>IIH Asset ID *</mat-label>
+      <input matInput formControlName="iihAssetId" placeholder="asset-123" />
+      <mat-hint>The asset identifier in IIH Essentials</mat-hint>
+      <mat-error *ngIf="form.get('iihAssetId')?.hasError('required')">IIH Asset ID is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>IIH Variable ID *</mat-label>
+      <input matInput formControlName="iihVariableId" placeholder="counter-var-456" />
+      <mat-hint>The variable/tag ID for counter data in IIH Essentials</mat-hint>
+      <mat-error *ngIf="form.get('iihVariableId')?.hasError('required')">IIH Variable ID is required</mat-error>
+    </mat-form-field>
+
+    <div class="toggle-field">
+      <mat-slide-toggle formControlName="enabled" color="primary">
+        Equipment Enabled
+      </mat-slide-toggle>
+      <span class="toggle-hint">Disabled equipment will not be monitored or polled</span>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="form.invalid">
+    <mat-icon>save</mat-icon>
+    {{ data.mode === 'create' ? 'Create Equipment' : 'Save Changes' }}
+  </button>
+</mat-dialog-actions>

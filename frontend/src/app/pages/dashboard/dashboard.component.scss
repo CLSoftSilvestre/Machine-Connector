@@ -1,0 +1,257 @@
+.dashboard-container {
+  padding: 24px;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+
+  .page-title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 500;
+    color: #1a237e;
+  }
+
+  .uptime {
+    font-size: 13px;
+    color: #757575;
+  }
+}
+
+// Stat Cards
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stat-card {
+  mat-card-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px !important;
+  }
+}
+
+.stat-icon-wrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  mat-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+  }
+
+  &.pending-bg { background-color: #e3f2fd; mat-icon { color: #1976d2; } }
+  &.failed-bg { background-color: #ffebee; mat-icon { color: #d32f2f; } }
+  &.equipment-bg { background-color: #e8eaf6; mat-icon { color: #3949ab; } }
+  &.sent-bg { background-color: #e8f5e9; mat-icon { color: #388e3c; } }
+}
+
+.stat-info {
+  .stat-value {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+    color: #212121;
+
+    &.failed-value { color: #d32f2f; }
+    &.sent-value { color: #388e3c; }
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: #757575;
+    margin-top: 4px;
+  }
+}
+
+// Connection Cards
+.connections-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.connection-card {
+  mat-card-content {
+    padding: 16px !important;
+  }
+
+  .mat-mdc-card-avatar {
+    background-color: #e8eaf6;
+    color: #3949ab;
+    border-radius: 50%;
+    padding: 6px;
+  }
+}
+
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+
+  .status-label {
+    font-size: 14px;
+    font-weight: 500;
+
+    &.label-connected { color: var(--status-connected); }
+    &.label-disconnected { color: var(--status-disconnected); }
+    &.label-connecting { color: var(--status-connecting); }
+    &.label-error { color: var(--status-error); }
+    &.label-unknown { color: var(--status-unknown); }
+  }
+}
+
+.stub-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  font-size: 11px;
+  color: #ff9800;
+  background-color: #fff3e0;
+  padding: 2px 8px;
+  border-radius: 4px;
+  width: fit-content;
+
+  .stub-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+}
+
+// Breakdown Cards
+.breakdown-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+
+  @media (max-width: 800px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.breakdown-card {
+  .breakdown-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &.total-row {
+      font-weight: 600;
+      padding-top: 12px;
+      border-top: 2px solid #e0e0e0;
+      border-bottom: none;
+    }
+  }
+
+  .breakdown-label {
+    font-size: 14px;
+    color: #424242;
+  }
+
+  .breakdown-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #212121;
+  }
+}
+
+// Recent Events Table
+.recent-events-card {
+  mat-card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    mat-icon {
+      color: #5c6bc0;
+    }
+  }
+}
+
+.type-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+
+  &.machine-status {
+    background-color: #e8eaf6;
+    color: #3949ab;
+  }
+
+  &.counter {
+    background-color: #e0f2f1;
+    color: #00796b;
+  }
+}
+
+.has-retries {
+  color: #f57c00;
+  font-weight: 600;
+}
+
+.no-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  color: #9e9e9e;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,125 @@
+.sidenav-container {
+  height: 100vh;
+}
+
+.app-sidenav {
+  width: 240px;
+  background: #1a237e;
+  color: white;
+  transition: width 0.2s ease;
+
+  &.mat-drawer-opened {
+    box-shadow: 4px 0 8px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.sidenav-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  min-height: 64px;
+
+  .app-icon {
+    color: #e8eaf6;
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+  }
+
+  .app-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+
+mat-nav-list {
+  padding-top: 8px;
+
+  a.mat-mdc-list-item {
+    color: rgba(255, 255, 255, 0.8);
+    border-radius: 0 24px 24px 0;
+    margin-right: 12px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    &.active-nav-item {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white;
+
+      mat-icon {
+        color: #e8eaf6;
+      }
+    }
+
+    mat-icon {
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+}
+
+.app-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+  .toolbar-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin-left: 8px;
+  }
+}
+
+.content-area {
+  padding: 0;
+  overflow-y: auto;
+  height: calc(100vh - 64px);
+}
+
+.connection-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 16px;
+  cursor: default;
+
+  .connection-label {
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+
+    &.connected { background-color: #69f0ae; }
+    &.connecting { background-color: #ffcc02; animation: pulse 1.5s ease-in-out infinite; }
+    &.error { background-color: #ff5252; }
+    &.unknown { background-color: #bdbdbd; }
+  }
+}
+
+.ws-indicator {
+  margin-left: 8px;
+  cursor: default;
+
+  .ws-connected { color: #69f0ae; }
+  .ws-disconnected { color: rgba(255, 255, 255, 0.5); }
+}
+
+@keyframes pulse {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.3); }
+  100% { opacity: 1; transform: scale(1); }
+}

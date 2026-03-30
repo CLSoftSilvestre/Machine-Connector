@@ -1,0 +1,52 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #sidenav
+    [opened]="sidenavOpened()"
+    mode="side"
+    class="app-sidenav"
+  >
+    <div class="sidenav-header">
+      <mat-icon class="app-icon">precision_manufacturing</mat-icon>
+      <span class="app-title" *ngIf="sidenavOpened()">Machine Connector</span>
+    </div>
+
+    <mat-nav-list>
+      <a
+        mat-list-item
+        *ngFor="let item of navItems"
+        [routerLink]="item.path"
+        routerLinkActive="active-nav-item"
+        [matTooltip]="!sidenavOpened() ? item.label : ''"
+        matTooltipPosition="right"
+      >
+        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+        <span matListItemTitle *ngIf="sidenavOpened()">{{ item.label }}</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar color="primary" class="app-toolbar">
+      <button mat-icon-button (click)="toggleSidenav()" aria-label="Toggle navigation">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="toolbar-title">{{ title }}</span>
+      <span class="spacer"></span>
+
+      <div class="connection-indicator" [matTooltip]="getOverallStatusLabel()">
+        <span class="status-dot" [class]="getOverallStatusClass()"></span>
+        <span class="connection-label">{{ getOverallStatusLabel() }}</span>
+      </div>
+
+      <div class="ws-indicator" [matTooltip]="wsConnected() ? 'WebSocket connected' : 'WebSocket disconnected'">
+        <mat-icon [class.ws-connected]="wsConnected()" [class.ws-disconnected]="!wsConnected()">
+          {{ wsConnected() ? 'wifi' : 'wifi_off' }}
+        </mat-icon>
+      </div>
+    </mat-toolbar>
+
+    <div class="content-area">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

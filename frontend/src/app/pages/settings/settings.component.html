@@ -1,0 +1,172 @@
+<div class="settings-container page-container">
+  <div class="page-header">
+    <h1 class="page-title">Settings</h1>
+    <span class="settings-subtitle">Configure connections and integrations</span>
+  </div>
+
+  <div class="loading-overlay" *ngIf="loading()">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <form [formGroup]="form" *ngIf="!loading()">
+
+    <!-- OPC-UA Section -->
+    <mat-card class="settings-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="section-icon opcua-icon">router</mat-icon>
+        <mat-card-title>OPC-UA Configuration</mat-card-title>
+        <mat-card-subtitle>Configure the OPC-UA server connection for machine status monitoring</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="form-grid">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Endpoint URL</mat-label>
+            <input matInput formControlName="opcuaEndpointUrl" placeholder="opc.tcp://your-server:4840" />
+            <mat-hint>OPC-UA server address (e.g. opc.tcp://192.168.1.100:4840)</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Application Name</mat-label>
+            <input matInput formControlName="opcuaAppName" placeholder="MachineConnector" />
+            <mat-hint>Client application name used during OPC-UA handshake</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div class="test-section">
+          <button mat-stroked-button (click)="testOpcua()" [disabled]="testingOpcua()" type="button">
+            <mat-spinner diameter="18" *ngIf="testingOpcua()"></mat-spinner>
+            <mat-icon *ngIf="!testingOpcua()">wifi_tethering</mat-icon>
+            Test OPC-UA Connection
+          </button>
+          <div class="test-result" *ngIf="testOpcuaResult()" [class.success]="testOpcuaResult()!.success" [class.failure]="!testOpcuaResult()!.success">
+            <mat-icon>{{ testOpcuaResult()!.success ? 'check_circle' : 'error' }}</mat-icon>
+            {{ testOpcuaResult()!.message }}
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- IIH Essentials Section -->
+    <mat-card class="settings-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="section-icon iih-icon">cloud</mat-icon>
+        <mat-card-title>IIH Essentials Configuration</mat-card-title>
+        <mat-card-subtitle>Configure the IIH Essentials connection for counter data polling</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="form-grid">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Base URL</mat-label>
+            <input matInput formControlName="iihBaseUrl" placeholder="http://iih-essentials" />
+            <mat-hint>IIH Essentials server base URL</mat-hint>
+          </mat-form-field>
+
+          <div class="two-col">
+            <mat-form-field appearance="outline">
+              <mat-label>Username</mat-label>
+              <input matInput formControlName="iihUsername" autocomplete="username" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Password</mat-label>
+              <input matInput formControlName="iihPassword" [type]="showIihPassword() ? 'text' : 'password'" autocomplete="current-password" />
+              <button mat-icon-button matSuffix (click)="showIihPassword.update(v => !v)" type="button">
+                <mat-icon>{{ showIihPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Counter Endpoint</mat-label>
+            <input matInput formControlName="iihCounterEndpoint" placeholder="/IIHEssentials/v1/aggregatedvalues" />
+            <mat-hint>API endpoint path for counter data retrieval</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div class="test-section">
+          <button mat-stroked-button (click)="testIih()" [disabled]="testingIih()" type="button">
+            <mat-spinner diameter="18" *ngIf="testingIih()"></mat-spinner>
+            <mat-icon *ngIf="!testingIih()">wifi_tethering</mat-icon>
+            Test IIH Connection
+          </button>
+          <div class="test-result" *ngIf="testIihResult()" [class.success]="testIihResult()!.success" [class.failure]="!testIihResult()!.success">
+            <mat-icon>{{ testIihResult()!.success ? 'check_circle' : 'error' }}</mat-icon>
+            {{ testIihResult()!.message }}
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Apriso MES Section -->
+    <mat-card class="settings-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="section-icon apriso-icon">factory</mat-icon>
+        <mat-card-title>Apriso MES Configuration</mat-card-title>
+        <mat-card-subtitle>Configure the Apriso MES integration for event publishing</mat-card-subtitle>
+      </mat-card-header>
+
+      <!-- Stub Mode Warning -->
+      <div class="stub-warning" *ngIf="isAprisoStub()">
+        <mat-icon>warning</mat-icon>
+        <div class="stub-warning-text">
+          <strong>Apriso integration is currently in stub mode.</strong>
+          Events are queued but not actually sent to the MES. Configure a real Apriso endpoint to enable production publishing.
+        </div>
+      </div>
+
+      <mat-card-content>
+        <div class="form-grid">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Base URL</mat-label>
+            <input matInput formControlName="aprisoBaseUrl" placeholder="http://apriso-server:8080" (blur)="checkAprisoStubMode()" />
+            <mat-hint>Apriso MES API base URL</mat-hint>
+          </mat-form-field>
+
+          <div class="two-col">
+            <mat-form-field appearance="outline">
+              <mat-label>Username</mat-label>
+              <input matInput formControlName="aprisoUsername" autocomplete="username" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Password</mat-label>
+              <input matInput formControlName="aprisoPassword" [type]="showAprisoPassword() ? 'text' : 'password'" autocomplete="current-password" />
+              <button mat-icon-button matSuffix (click)="showAprisoPassword.update(v => !v)" type="button">
+                <mat-icon>{{ showAprisoPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>API Key</mat-label>
+            <input matInput formControlName="aprisoApiKey" placeholder="Optional API key" />
+            <mat-hint>Optional X-API-Key header value</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div class="test-section">
+          <button mat-stroked-button (click)="testApriso()" [disabled]="testingApriso()" type="button">
+            <mat-spinner diameter="18" *ngIf="testingApriso()"></mat-spinner>
+            <mat-icon *ngIf="!testingApriso()">wifi_tethering</mat-icon>
+            Test Apriso Connection
+          </button>
+          <div class="test-result" *ngIf="testAprisoResult()" [class.success]="testAprisoResult()!.success" [class.failure]="!testAprisoResult()!.success">
+            <mat-icon>{{ testAprisoResult()!.success ? 'check_circle' : 'error' }}</mat-icon>
+            {{ testAprisoResult()!.message }}
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Sticky Save Footer -->
+    <div class="save-footer">
+      <span class="save-hint">Settings are stored in the database and override environment variables at runtime.</span>
+      <button mat-raised-button color="primary" (click)="saveSettings()" [disabled]="saving()" type="button">
+        <mat-spinner diameter="20" *ngIf="saving()"></mat-spinner>
+        <mat-icon *ngIf="!saving()">save</mat-icon>
+        {{ saving() ? 'Saving...' : 'Save All Settings' }}
+      </button>
+    </div>
+
+  </form>
+</div>

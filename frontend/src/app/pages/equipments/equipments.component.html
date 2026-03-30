@@ -1,0 +1,111 @@
+<div class="equipments-container page-container">
+  <div class="page-header">
+    <div class="header-left">
+      <h1 class="page-title">Equipment</h1>
+      <span class="equipment-count" *ngIf="equipments().length > 0">
+        {{ equipments().length }} equipment(s) configured
+      </span>
+    </div>
+    <button mat-raised-button color="primary" (click)="openCreateDialog()" class="add-btn">
+      <mat-icon>add</mat-icon>
+      Add Equipment
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <!-- Search Bar -->
+      <div class="toolbar-row">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search equipment</mat-label>
+          <mat-icon matPrefix>search</mat-icon>
+          <input matInput [(ngModel)]="searchText" (ngModelChange)="applyFilter()" placeholder="Name, description, or node ID..." />
+          <button *ngIf="searchText" mat-icon-button matSuffix (click)="searchText = ''; applyFilter()">
+            <mat-icon>clear</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+
+      <!-- Loading Spinner -->
+      <div class="loading-overlay" *ngIf="loading()">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+
+      <!-- Equipment Table -->
+      <div class="table-container" *ngIf="!loading()">
+        <table mat-table [dataSource]="filteredEquipments()" class="full-width">
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let eq">
+              <div class="equipment-name">
+                <mat-icon class="equipment-icon">settings_input_component</mat-icon>
+                <strong>{{ eq.name }}</strong>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>Description</th>
+            <td mat-cell *matCellDef="let eq">
+              <span class="description-text">{{ eq.description || '—' }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="opcuaNodeId">
+            <th mat-header-cell *matHeaderCellDef>OPC-UA Node ID</th>
+            <td mat-cell *matCellDef="let eq">
+              <code class="node-id">{{ eq.opcuaNodeId }}</code>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="iihAssetId">
+            <th mat-header-cell *matHeaderCellDef>IIH Asset ID</th>
+            <td mat-cell *matCellDef="let eq">
+              <code class="node-id">{{ eq.iihAssetId }}</code>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let eq">
+              <span class="status-chip" [class.status-sent]="eq.enabled" [class.status-failed]="!eq.enabled">
+                <span class="status-dot" [class.connected]="eq.enabled" [class.disconnected]="!eq.enabled"></span>
+                {{ eq.enabled ? 'Enabled' : 'Disabled' }}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="actions-header">Actions</th>
+            <td mat-cell *matCellDef="let eq" class="actions-cell">
+              <button mat-icon-button color="primary" (click)="openEditDialog(eq)" matTooltip="Edit equipment">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button [color]="eq.enabled ? 'warn' : 'primary'" (click)="toggleEquipment(eq)"
+                [matTooltip]="eq.enabled ? 'Disable equipment' : 'Enable equipment'">
+                <mat-icon>{{ eq.enabled ? 'toggle_on' : 'toggle_off' }}</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteEquipment(eq)" matTooltip="Delete equipment">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="equipment-row"></tr>
+        </table>
+
+        <div class="no-data" *ngIf="filteredEquipments().length === 0 && !loading()">
+          <mat-icon>settings_input_component</mat-icon>
+          <p *ngIf="searchText">No equipment matching "{{ searchText }}"</p>
+          <p *ngIf="!searchText">No equipment configured yet. Click "Add Equipment" to get started.</p>
+          <button mat-raised-button color="primary" *ngIf="!searchText" (click)="openCreateDialog()">
+            <mat-icon>add</mat-icon>
+            Add First Equipment
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,167 @@
+.settings-container {
+  padding: 24px;
+  padding-bottom: 100px; // Space for sticky footer
+}
+
+.page-header {
+  margin-bottom: 24px;
+
+  .page-title {
+    margin: 0 0 4px 0;
+    font-size: 24px;
+    font-weight: 500;
+    color: #1a237e;
+  }
+
+  .settings-subtitle {
+    font-size: 14px;
+    color: #757575;
+  }
+}
+
+.loading-overlay {
+  display: flex;
+  justify-content: center;
+  padding: 64px;
+}
+
+.settings-card {
+  margin-bottom: 24px;
+  overflow: visible;
+
+  mat-card-header {
+    margin-bottom: 16px;
+  }
+}
+
+.section-icon {
+  border-radius: 50%;
+  padding: 8px;
+  font-size: 24px;
+  width: 40px !important;
+  height: 40px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.opcua-icon { background-color: #e8eaf6; color: #3949ab; }
+  &.iih-icon { background-color: #e0f2f1; color: #00796b; }
+  &.apriso-icon { background-color: #fce4ec; color: #c2185b; }
+}
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.test-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 200px;
+  }
+}
+
+.test-result {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  flex: 1;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  &.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  &.failure {
+    background-color: #ffebee;
+    color: #c62828;
+  }
+}
+
+.stub-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  background-color: #fff8e1;
+  border-left: 4px solid #f9a825;
+  margin: 0 16px 16px;
+  border-radius: 0 4px 4px 0;
+
+  mat-icon {
+    color: #f9a825;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .stub-warning-text {
+    font-size: 13px;
+    color: #5d4037;
+    line-height: 1.5;
+
+    strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+  }
+}
+
+.save-footer {
+  position: fixed;
+  bottom: 0;
+  left: 240px; // sidenav width
+  right: 0;
+  background-color: white;
+  border-top: 1px solid #e0e0e0;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  z-index: 50;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
+
+  .save-hint {
+    font-size: 12px;
+    color: #9e9e9e;
+    margin-right: auto;
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 160px;
+  }
+}

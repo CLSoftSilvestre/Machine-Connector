@@ -1,0 +1,154 @@
+<div class="events-container page-container">
+  <div class="page-header">
+    <h1 class="page-title">Events</h1>
+    <div class="header-actions">
+      <mat-slide-toggle [(ngModel)]="autoRefresh" (change)="toggleAutoRefresh()" color="primary">
+        Auto-refresh (10s)
+      </mat-slide-toggle>
+      <button mat-stroked-button (click)="loadEvents()" matTooltip="Refresh now">
+        <mat-icon>refresh</mat-icon>
+        Refresh
+      </button>
+      <button mat-stroked-button color="warn" (click)="clearFailed()">
+        <mat-icon>delete_sweep</mat-icon>
+        Clear Failed
+      </button>
+    </div>
+  </div>
+
+  <mat-card>
+    <!-- Filter Row -->
+    <mat-card-content>
+      <div class="filter-row">
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Status</mat-label>
+          <mat-select [(ngModel)]="statusFilter" (ngModelChange)="onFilterChange()">
+            <mat-option value="all">All Statuses</mat-option>
+            <mat-option value="PENDING">Pending</mat-option>
+            <mat-option value="SENDING">Sending</mat-option>
+            <mat-option value="SENT">Sent</mat-option>
+            <mat-option value="FAILED">Failed</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Type</mat-label>
+          <mat-select [(ngModel)]="typeFilter" (ngModelChange)="onFilterChange()">
+            <mat-option value="all">All Types</mat-option>
+            <mat-option value="MACHINE_STATUS">Machine Status</mat-option>
+            <mat-option value="COUNTER">Counter</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Equipment</mat-label>
+          <mat-select [(ngModel)]="equipmentFilter" (ngModelChange)="onFilterChange()">
+            <mat-option value="all">All Equipment</mat-option>
+            <mat-option *ngFor="let eq of equipments()" [value]="eq.id">{{ eq.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <span class="total-count">{{ total() }} event(s) total</span>
+      </div>
+
+      <!-- Loading -->
+      <div class="loading-overlay" *ngIf="loading()">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+
+      <!-- Events Table -->
+      <div class="table-container" *ngIf="!loading()">
+        <table mat-table [dataSource]="events()" multiTemplateDataRows class="full-width">
+
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let event">
+              <span class="type-chip" [class.machine-status]="event.type === 'MACHINE_STATUS'" [class.counter]="event.type === 'COUNTER'">
+                <mat-icon>{{ event.type === 'MACHINE_STATUS' ? 'memory' : 'speed' }}</mat-icon>
+                {{ getTypeLabel(event.type) }}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="equipmentName">
+            <th mat-header-cell *matHeaderCellDef>Equipment</th>
+            <td mat-cell *matCellDef="let event">{{ event.equipmentName }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let event">
+              <span class="status-chip" [class]="getStatusClass(event.status)">{{ event.status }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="createdAt">
+            <th mat-header-cell *matHeaderCellDef>Created</th>
+            <td mat-cell *matCellDef="let event">{{ formatTimestamp(event.createdAt) }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="retryCount">
+            <th mat-header-cell *matHeaderCellDef>Retries</th>
+            <td mat-cell *matCellDef="let event">
+              <span [class.has-retries]="event.retryCount > 0">{{ event.retryCount }}</span>
+              <span *ngIf="event.errorMessage" class="error-hint" [matTooltip]="event.errorMessage">
+                <mat-icon>info_outline</mat-icon>
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Payload</th>
+            <td mat-cell *matCellDef="let event">
+              <button mat-icon-button (click)="toggleExpand(event.id)" [matTooltip]="expandedEventId() === event.id ? 'Hide payload' : 'Show payload'">
+                <mat-icon>{{ expandedEventId() === event.id ? 'expand_less' : 'expand_more' }}</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <!-- Expanded detail row -->
+          <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let event" [attr.colspan]="displayedColumns.length">
+              <div class="event-detail" *ngIf="expandedEventId() === event.id">
+                <div class="event-detail-header">
+                  <span class="detail-label">Event ID:</span>
+                  <code>{{ event.id }}</code>
+                  <span *ngIf="event.sentAt" class="detail-label sent-at">
+                    Sent at: {{ formatTimestamp(event.sentAt) }}
+                  </span>
+                  <span *ngIf="event.nextRetryAt" class="detail-label next-retry">
+                    Next retry: {{ formatTimestamp(event.nextRetryAt) }}
+                  </span>
+                </div>
+                <div *ngIf="event.errorMessage" class="error-message">
+                  <mat-icon>error</mat-icon>
+                  {{ event.errorMessage }}
+                </div>
+                <pre class="payload-json">{{ formatPayload(event.payload) }}</pre>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="event-row"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+        </table>
+
+        <div class="no-data" *ngIf="events().length === 0">
+          <mat-icon>inbox</mat-icon>
+          <p>No events found matching current filters.</p>
+        </div>
+      </div>
+
+      <!-- Paginator -->
+      <mat-paginator
+        [length]="total()"
+        [pageSize]="pageSize"
+        [pageIndex]="pageIndex"
+        [pageSizeOptions]="[10, 20, 50, 100]"
+        (page)="onPageChange($event)"
+        showFirstLastButtons
+      ></mat-paginator>
+    </mat-card-content>
+  </mat-card>
+</div>

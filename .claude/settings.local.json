@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"const pkg = require\\(''./package.json''\\); console.log\\(''name:'', pkg.name\\); console.log\\(''deps:'', Object.keys\\(pkg.dependencies\\).join\\('', ''\\)\\)\")",
+      "Bash(node -e \"const pkg = require\\(''./package.json''\\); console.log\\(''name:'', pkg.name\\); console.log\\(''angular version:'', pkg.dependencies[''@angular/core'']\\)\")"
+    ]
+  }
+}

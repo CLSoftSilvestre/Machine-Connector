@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: machine-connector-backend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - connector-data:/app/data
+      - connector-logs:/app/logs
+    env_file:
+      - ./backend/.env
+    networks:
+      - connector-net
+
+  frontend:
+    build: ./frontend
+    container_name: machine-connector-frontend
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - connector-net
+
+volumes:
+  connector-data:
+  connector-logs:
+
+networks:
+  connector-net:
+    driver: bridge
