@@ -2,7 +2,12 @@
   "permissions": {
     "allow": [
       "Bash(node -e \"const pkg = require\\(''./package.json''\\); console.log\\(''name:'', pkg.name\\); console.log\\(''deps:'', Object.keys\\(pkg.dependencies\\).join\\('', ''\\)\\)\")",
-      "Bash(node -e \"const pkg = require\\(''./package.json''\\); console.log\\(''name:'', pkg.name\\); console.log\\(''angular version:'', pkg.dependencies[''@angular/core'']\\)\")"
+      "Bash(node -e \"const pkg = require\\(''./package.json''\\); console.log\\(''name:'', pkg.name\\); console.log\\(''angular version:'', pkg.dependencies[''@angular/core'']\\)\")",
+      "Bash(npm show:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(node -e \":*)",
+      "Bash(node -e \"const fs=require\\(''fs''\\); const c=JSON.parse\\(fs.readFileSync\\(''angular.json'',''utf8''\\)\\); console.log\\(Object.keys\\(c.projects\\)\\)\")"
     ]
   }
 }

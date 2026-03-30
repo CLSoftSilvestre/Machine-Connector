@@ -37,7 +37,7 @@ export interface EventStats {
 }
 
 export interface ConnectionStatus {
-  opcua: 'connected' | 'disconnected' | 'connecting' | 'error';
+  opcua: 'connected' | 'disconnected' | 'connecting' | 'error' | 'unknown';
   iih: 'connected' | 'disconnected' | 'error' | 'unknown';
   apriso: 'connected' | 'disconnected' | 'error' | 'unknown';
 }

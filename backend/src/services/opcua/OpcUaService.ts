@@ -191,8 +191,8 @@ export class OpcUaService {
         this.onDataChange(equipment, dataValue);
       });
 
-      monitoredItem.on('err', (err: Error) => {
-        logger.error(`OPC-UA monitored item error for ${equipment.name}: ${err.message}`);
+      monitoredItem.on('err', (msg: string) => {
+        logger.error(`OPC-UA monitored item error for ${equipment.name}: ${msg}`);
       });
 
       this.monitoredItems.set(equipment.id, monitoredItem);

@@ -182,6 +182,14 @@ export class SettingsComponent implements OnInit {
     });
   }
 
+  toggleIihPassword(): void {
+    this.showIihPassword.update(v => !v);
+  }
+
+  toggleAprisoPassword(): void {
+    this.showAprisoPassword.update(v => !v);
+  }
+
   testApriso(): void {
     const baseUrl = String(this.form.get('aprisoBaseUrl')?.value || '');
     if (!baseUrl) {
