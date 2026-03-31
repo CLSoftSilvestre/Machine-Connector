@@ -7,7 +7,27 @@
       "Bash(npm install:*)",
       "Bash(npm run:*)",
       "Bash(node -e \":*)",
-      "Bash(node -e \"const fs=require\\(''fs''\\); const c=JSON.parse\\(fs.readFileSync\\(''angular.json'',''utf8''\\)\\); console.log\\(Object.keys\\(c.projects\\)\\)\")"
+      "Bash(node -e \"const fs=require\\(''fs''\\); const c=JSON.parse\\(fs.readFileSync\\(''angular.json'',''utf8''\\)\\); console.log\\(Object.keys\\(c.projects\\)\\)\")",
+      "Bash(/Users/celsosilvestre/Documents/machine-connector/backend/.env.example:*)",
+      "Bash(/Users/celsosilvestre/Documents/machine-connector/backend/config/__init__.py:*)",
+      "Bash(/Users/celsosilvestre/Documents/machine-connector/backend/utils/logger.py:*)",
+      "Bash(/Users/celsosilvestre/Documents/machine-connector/backend/db/__init__.py:*)",
+      "Bash(/Users/celsosilvestre/Documents/machine-connector/backend/services/apriso/apriso_service.py:*)",
+      "Bash(/Users/celsosilvestre/Documents/machine-connector/backend/services/iih/iih_service.py:*)",
+      "Bash(/Users/celsosilvestre/Documents/machine-connector/backend/api/routes/events.py:*)",
+      "Bash(/Users/celsosilvestre/Documents/machine-connector/backend/api/routes/health.py:*)",
+      "Bash(/Users/celsosilvestre/Documents/machine-connector/backend/api/server.py:*)",
+      "Bash(/Users/celsosilvestre/Documents/machine-connector/backend/scheduler/counter_scheduler.py:*)",
+      "Bash(/Users/celsosilvestre/Documents/machine-connector/backend/main.py:*)",
+      "Bash(pip install:*)",
+      "Bash(python -m py_compile main.py config/__init__.py db/__init__.py db/migrations.py utils/logger.py utils/websocket.py services/queue/event_queue_service.py services/apriso/apriso_service.py services/iih/iih_service.py services/opcua/opcua_service.py scheduler/counter_scheduler.py api/routes/equipments.py api/routes/events.py api/routes/settings.py api/routes/health.py api/server.py)",
+      "Bash(pip3 install:*)",
+      "Bash(python3 -m py_compile main.py config/__init__.py db/__init__.py db/migrations.py utils/logger.py utils/websocket.py services/queue/event_queue_service.py services/apriso/apriso_service.py services/iih/iih_service.py services/opcua/opcua_service.py scheduler/counter_scheduler.py api/routes/equipments.py api/routes/events.py api/routes/settings.py api/routes/health.py api/server.py)",
+      "Bash(timeout 8 python3 main.py)",
+      "Bash(python3 -c \":*)"
+    ],
+    "additionalDirectories": [
+      "/Users/celsosilvestre/Documents/machine-connector/backend/src"
     ]
   }
 }
